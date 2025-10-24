@@ -19,4 +19,8 @@ const ProductSchema: Schema = new Schema({
   updatedAt: { type: Date, default: Date.now }
 });
 
-export default mongoose.model<IProduct>('Product', ProductSchema);
+// evita OverwriteModelError / server reloads in development
+const Product = (mongoose.models && (mongoose.models.Product as mongoose.Model<IProduct>))
+  || mongoose.model<IProduct>('Product', ProductSchema);
+
+export default Product;

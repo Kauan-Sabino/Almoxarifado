@@ -40,9 +40,10 @@ export default function LoginPage() {
       }
 
       // sucesso: salvar token e user e redirecionar
-      if (json?.token) localStorage.setItem('token', json.token)
-      if (json?.data) localStorage.setItem('user', JSON.stringify(json.data))
-      router.push('/dashboard')
+  if (json?.token) localStorage.setItem('token', json.token)
+  if (json?.data) localStorage.setItem('user', JSON.stringify(json.data))
+  // redirect to home (root)
+  router.push('/')
     } catch (err) {
       setError('Erro de rede. Tente novamente.')
       setLoading(false)
@@ -85,7 +86,10 @@ export default function LoginPage() {
         </button>
 
         <div style={{ marginTop: 12, fontSize: 13, color: '#666' }}>
-          Não tem conta? Cadastre-se na tela de registro.
+          Não tem conta?{' '}
+          <a href="/cadastro" style={{ color: '#0366d6', textDecoration: 'none', fontWeight: 500 }}>
+            Cadastre-se aqui
+          </a>
         </div>
       </form>
     </div>

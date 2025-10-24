@@ -19,17 +19,17 @@ const UserSchema = new Schema<IUser>({
 
 //hash
 UserSchema.pre<IUser>('save', async function (next) {
-    if (!this.isModified('password')) {
-        return next(); 
-        try{
-            const salt = await bcrypt.genSalt(10);
-            const hash = await bcrypt.hash(this.senha, salt);
-            this.senha = hash;
-            next(); 
-        }catch(error:any){
-            next(error);
-        }
-    }   
+    if (!this.isModified('senha')) {
+        return next();
+    }
+    try {
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(this.senha, salt);
+        this.senha = hash;
+        next();
+    } catch (error: any) {
+        next(error);
+    }
 })
 
 //comparar senha

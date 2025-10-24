@@ -22,18 +22,88 @@ O Aplicativo de Inventário de Armazém é uma solução web projetada para ajud
 Avaliacao_Pratica
 ├── src
 │   └── app
-│   │    ├──api
-│   │    ├──cadastro
-│   │    ├──dashboard
-│   │    └──login
+│   │    ├── api
+│   │    │  ││└── Moviment
+│   │    │  ││   │└──[id]
+│   │    │  ││   │   └── route.ts
+│   │    │  ││   └─ route.ts
+│   │    │  │└── Product
+│   │    │  │   │└──[id]
+│   │    │  │   │   └── route.ts
+│   │    │  │   └─ route.ts
+│   │    │  └── user
+│   │    │     ├── [id]
+│   │    │     │  └── route.ts
+│   │    │     ├── login
+│   │    │     │  └── route.ts
+│   │    │     └── register
+│   │    │        └── route.ts
+│   │    ├── cadastro
+│   │    │   └── page.tsx
+│   │    ├── componentes
+│   │    │   └── dashboads            
+│   │    │     │ └── ProductDashboad.tsx            
+│   │    │     └── StockDashboad.tsx           
+│   │    ├── produtos
+│   │    │   └── page.tsx
+│   │    └── login
+│   │        └── page.tsx
 │   │
 │   ├── controllers
+│   │   │  │  └── MovimentControler.ts
+│   │   │  └── ProductController.ts
+│   │   └── UserController.ts
 │   ├── services
+│   │   └── MongoDB.ts
 │   └── models
-│        
+│       │ │ └── Product.ts
+│       │ └── Moviment.ts
+│       └── User.ts
+│
 ├── .env.local
 ├── next.config.js
 ├── tsconfig.json
 ├── package.json
 └── README.md
 ```
+
+# Diagrama de classe
+
+```mermaid
+
+classDiagram
+
+    class User{
+        _String userId
+        +String nome
+        +String email
+        +String senha
+        +login()
+        +logout()
+        +CRUD()
+    }
+
+    class Product{
+        _String productId
+        +String name
+        +String description
+        +number quantity
+        +number minimumStock 
+        +date createdAt 
+        +date updatedAt 
+        +CRUD()
+    }
+
+    class Moviment{
+        +String productId
+        +number quantity
+        +type 'entry' | 'exit'
+        +date Date
+        +String userId
+        +CRUD() 
+    }
+
+    Usuario "1" -- "1+" OrdemServico: "é responsavel por"
+    Equipamento "1" -- "1+" OrdemServico: "associada a" 
+
+```marmaid

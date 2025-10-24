@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { register } from '@/controllers/UserController';
+import { login } from '@/controllers/UserController';
 import { connectToDatabase } from '@/services/mongodb';
 
 export async function POST(request: NextRequest) {
@@ -24,13 +24,13 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    // chama a função de registro
-    await register({ body } as any, mockRes as any);
+    // Call the login function
+    await login({ body } as any, mockRes as any);
 
     // Return the response with the appropriate status code
     return NextResponse.json(responseData, { status: statusCode });
   } catch (error: any) {
-    console.error('Registration error:', error);
+    console.error('Login error:', error);
     return NextResponse.json({ 
       success: false, 
       message: error.message || 'Erro interno do servidor' 

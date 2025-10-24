@@ -24,8 +24,8 @@ export const register = async (req: NextApiRequest, res: NextApiResponse) => {
     const exists = await User.findOne({ email });
     if (exists) return res.status(409).json({ success: false, message: 'Email já cadastrado.' });
 
-    const hash = await bcrypt.hash(senha, 10);
-    const user = new User({ nome, email, senha: hash });
+  // Let the User model pre-save hook hash the password to avoid double-hashing
+  const user = new User({ nome, email, senha });
     await user.save();
 
     const token = generateToken(user);

@@ -1,37 +1,42 @@
 import mongoose from 'mongoose';
 
-const MongoUri = process.env.DATABASE_URL;
+const MONGO_URI = process.env.MONGO_URI || process.env.DATABASE_URL || 'mongodb://localhost:27017/avaliacao_pratica';
 
-if (!MongoUri) {
-  throw new Error('defina database no env.local');
+interface MongooseConnection {
+  conn: typeof mongoose | null;
+  promise: Promise<typeof mongoose> | null;
 }
 
-let cached = (global as any).mongoose;
-
-if (!cached) {
-  cached = (global as any).mongoose = { conectada: null, promessa: null };
+let cached: MongooseConnection = (global as any).mongoose || { conn: null, promise: null };
+if (!(global as any).mongoose) {
+  (global as any).mongoose = cached;
 }
 
-async function conectarMongo() {
-  if (cached.conectada) {
-    return cached.conectada;
+export async function connectToDatabase() {
+  if (cached.conn) {
+    console.log('Using existing MongoDB connection');
+    return cached.conn;
   }
 
-    if (!cached.promessa) {
-        const aguarde ={bufferCommands:false};
-    cached.promessa = mongoose.connect(MongoUri!, aguarde).then((mongoose) => {
-        console.log('Conectado ao MongoDB');
-        return mongoose;
+  if (!MONGO_URI) {
+    throw new Error('Please define the MONGO_URI environment variable');
+  }
+
+  if (!cached.promise) {
+    const options = { bufferCommands: false };
+    cached.promise = mongoose.connect(MONGO_URI, options).then((mongoose) => {
+      console.log('Connected to MongoDB successfully');
+      return mongoose;
     });
- }
+  }
 
- try{
-    cached.conectada = await cached.promessa;
- }catch(erro){
-    cached.promessa = null;
-    throw erro;
- }
-    return cached.conectada;
+  try {
+    cached.conn = await cached.promise;
+  } catch (error) {
+    cached.promise = null;
+    console.error('MongoDB connection error:', error);
+    throw error;
+  }
+
+  return cached.conn;
 }
-
-export { conectarMongo };
